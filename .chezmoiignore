@@ -1,0 +1,40 @@
+# ignore on all systems
+key.txt.age
+README.md
+LICENSE
+bootstrap.sh
+styles
+# my main terminal is kitty; keeping only for historic purposes
+.config/alacritty/
+# Not in use right now
+.config/procs/
+# Not in use in favour of xbindkeysrc
+.config/sxhkd
+
+# only on darwin systems
+{{- if ne .chezmoi.os "darwin" }}
+.config/kitty/macos-launch-services-cmdline
+Library
+.config/sketchybar
+.yabairc
+.skhdrc
+.gnupg
+{{- end }}
+
+# only on linux systems
+{{- if ne .chezmoi.os "linux" }}
+.config/i3blocks
+.config/i3status
+.config/nixpkgs
+.config/rofi
+.config/sxiv
+.config/zathura
+.config/mimeapps.list
+.i3
+.urlview
+.xinitrc
+.xprofile
+.Xresources
+.xbindkeysrc
+{{- end }}
+

@@ -1,0 +1,179 @@
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/cleaner
+# Basic Settings
+# https://github.com/gokcehan/lf/wiki/Tips#split-words-by-default-in-zsh
+set shell zsh
+set shellopts '-euy'
+set ifs "\n"
+set filesep "\n"  # default already
+set preview true
+#set hidden true
+set drawbox true
+set icons true
+set ignorecase true
+set period 1
+
+# Remove some defaults
+map m
+map o
+map "'"
+map '"'
+map d
+map c
+map e
+map f
+map t
+map ":"
+
+cmd open ${{
+if [[ "$OSTYPE" =~ "linux" ]]; then
+    case $(file --mime-type $f -b) in
+	      image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
+        text/*) $EDITOR $fx;;
+        image/x-xcf|image/svg+xml) setsid -f inkscape $f >/dev/null 2>&1 ;;
+        image/*) rotdir $f | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\)\(_large\)*$" | sxiv -aio 2>/dev/null | lf-select ;;
+        audio/*) mpv --audio-display=no $f ;;
+        video/*) setsid -f mpv $f -quiet >/dev/null 2>&1 ;;
+        application/pdf|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
+        application/vnd.*) libreoffice $f  >/dev/null 2>&1 & ;;
+        *) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done ;;
+    esac
+elif [[ "$OSTYPE" =~ "darwin" ]]; then
+    case $(file --mime-type $f -b) in
+	      image/vnd.djvu|application/pdf|application/octet-stream) open $fx ;;
+        text/*) $EDITOR $fx;;
+    esac
+fi
+}}
+
+# Dragon fucntions
+cmd dragon %dragon --on-top -a -x $fx
+cmd dragon-stay %dragon --on-top -a $fx
+cmd dragon-individual %dragon --on-top $fx
+# Dragon Mapping
+# map dr dragon
+# map ds dragon-stay
+map di dragon-individual
+
+# Archive commands
+cmd unarchive ${{
+  case "$f" in
+      *.zip) unzip "$f" ;;
+      *.tar.gz) tar -xzvf "$f" ;;
+      *.tar.bz2) tar -xjvf "$f" ;;
+      *.tar) tar -xvf "$f" ;;
+      *) echo "Unsupported format" ;;
+  esac
+}}
+cmd zip %zip -r "$f" "$f"
+cmd tar %tar cvf "$f.tar" "$f"
+cmd targz %tar cvzf "$f.tar.gz" "$f"
+cmd tarbz2 %tar cjvf "$f.tar.bz2" "$f"
+# Archive Mappings
+map az zip
+map at tar
+map ag targz
+map ab targz
+map ex unarchive
+
+# File commands
+cmd yank-dirname $dirname -- "$f" | head -c-1 | ccopy
+cmd yank-path $printf '%s' "$fx" | ccopy
+cmd yank-basename $basename -a -- $fx | head -c-1 | ccopy
+cmd yank-content $cat $fx | ccopy
+cmd bulkrename ${{
+  printf '%s\n' $fx | vidir -
+}}
+# File mappings
+map fb yank-basename
+map fd yank-dirname
+map fp yank-path
+map fy yank-content
+map br bulkrename
+
+
+# Dir commands
+cmd dir-size %dua "$f"
+cmd dir-size-interactive %$TERMINAL -e dua i "$f"
+cmd open-terminal-in-dir ${{
+    if [ -f "$f" ]; then
+      dir="$(dirname -- "$(readlink -f -- "$f")")"
+    else
+      dir="$f"
+    fi
+    $TERMINAL --working-directory "$dir"
+  }}
+cmd zoxide_jump ${{
+  printf "Jump to: "
+  read ans
+  res=$( zoxide query -l $ans | fzf --query="$ans " --select-1 --exit-0 --height=25% --reverse --no-sort --cycle)
+  lf -remote "send $id cd \"$res\""
+}}
+map cf $lf -remote "send $id select '$(fd . $HOME --type d --hidden --follow | fzf)'"
+# Dir bindings
+map ds dir-size
+map da dir-size-interactive
+map do dir-open-in-terminal
+map to zoxide_jump
+map cdh cd ~
+map cdc cd ~/.config
+map cdd cd ~/Downloads
+
+# File Openers
+map E $$EDITOR "$f"
+cmd open-with %"$@" $fx
+map O push <enter>open-with<space>
+
+# Git commands
+cmd git-pull ${{clear; git pull || true; echo "press ENTER"; read ENTER}}
+cmd git-status ${{clear; git status; echo "press ENTER"; read ENTER}}
+cmd git-log ${{clear; git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit}}
+# Git mappings
+map gp git-pull
+map gs git-status
+map gl git-log
+
+# Trash commands
+cmd trash ${{
+  files=$(printf "$fx" | tr '\n' ';')
+  while [ "$files" ]; do
+    # extract the substring from start of string up to delimiter.
+    # this is the first "element" of the string.
+    file=${files%%;*}
+
+    trash-put "$(basename "$file")"
+    # if there's only one element left, set `files` to an empty string.
+    # this causes us to exit this `while` loop.
+    # else, we delete the first "element" of the string from files, and move onto the next.
+    if [ "$files" = "$file" ]; then
+      files=''
+    else
+      files="${files#*;}"
+    fi
+  done
+}}
+cmd clear_trash %trash-empty
+cmd restore_trash ${{
+  trash-restore
+}}
+# Trash mappings
+map dd trash
+map tc clear_trash
+map tr restore_trash
+
+# Basic Functions
+map . set hidden!
+map DD delete
+map p paste
+map x cut
+map y copy
+map o open
+map r rename
+map H top
+map L bottom
+map R reload
+map C clear
+map U unselect
+map A select-all
+map ":" shell
+map <enter> read

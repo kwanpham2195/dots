@@ -50,4 +50,4 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 
 
 # this config to be always available
-# source $HOME/.zshenv
+source $HOME/.zshenv

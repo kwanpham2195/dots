@@ -7,8 +7,8 @@
 
 " ------------------------------------------------------------------------------
 
-" Only show one pane at start
-only
+" Only show two panes at start
+vsplit
 
 " This is the actual command used to start vi.  The default is vim.
 " If you would like to use another vi clone such as Elvis or Vile
@@ -186,10 +186,12 @@ fileviewer *.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,
     \ %pc
     \ vifmimg clear
 
+" Pictures
+filetype *.bmp,*.jpg,*.jpeg,*.png,*.xpm open -a Preview %f &
 fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.xpm
-    \ vifmimg draw %px %py %pw %ph %c
+    \ kitty +icat --silent --transfer-mode=stream --place=%pwx%ph@%pxx%py %c %N
     \ %pc
-    \ vifmimg clear
+    \ kitty icat --clear --silent %pd
 
 fileviewer *.gif
     \ vifmimg gifpreview %px %py %pw %ph %c

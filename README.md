@@ -1,6 +1,6 @@
 # Dotfiles
 
-My [dotfiles](https://wiki.archlinux.org/title/Dotfiles) for `macOS` and `Linux` (primarily MacOS).
+My [dotfiles](https://wiki.archlinux.org/title/Dotfiles) for `macOS`.
 
 ## Bootstrap
 
@@ -12,7 +12,7 @@ chmod +x /tmp/bootstrap.sh
 bash -c /tmp/./bootstrap.sh
 ```
 
-Tested with Arch Linux and macOS on Apple Silicone. Should work with most Linux variants.
+Tested with Arch Linux and macOS on Apple Silicone.
 
 **Regarding the included brewfile keep in mind that Brew on Linux only supports amd64 on Linux**
 

@@ -48,6 +48,7 @@ alias \
   srczsh='source $HOME/.zshrc' \
   cls="clear" \
   ..='cd ..' \
+  cd2='cd ../..' \
   cd3='cd ../../..' \
   cd4='cd ../../../..' \
   cd5='cd ../../../../../' \
@@ -84,13 +85,12 @@ alias \
 
 # Tmux
 alias \
-  tls='tmux ls'
+  tls='tmux ls' \
   tkill="for s in \$(tmux list-sessions | awk '{print \$1}' | rg ':' -r '' | fzf); do tmux kill-session -t \$s; done;"
 
 # CLI
 alias \
   xo='mimeopen' \
-  nova='$HOME/workspace/git.rootknecht.net/scripts/fzf-nova/fzf-nova' \
   slack-id="slack-term -config ~/.config/slack-term/id-config" \
   slack-idz="slack-term -config ~/.config/slack-term/idz-config" \
   to='zi' \
@@ -98,21 +98,10 @@ alias \
   vf='vifm ~' \
   vf.='vifm .'
 
-# hledger
-alias \
-  ledger-is-yearly='hledger -f $LEDGER_DIR/all.ledger is -Y -S' \
-  ledger-is-quarterly='hledger -f $LEDGER_DIR/all.ledger is -Q -S' \
-  ledger-is-monthly-html='hledger -f $LEDGER_DIR/all.ledger is -M -S -o monthly.html' \
-  ledger-is-weekly='hledger -f $LEDGER_DIR/all.ledger is -W -S -o weekly.html' \
-  ledger-is-daily='hledger -f $LEDGER_DIR/all.ledger is -D -S -o daily.html' \
-  ledger-show-accounts='hledger -f $LEDGER_DIR/all.ledger accounts' \
-  ledger-show-stats='hledger -f $LEDGER_DIR/all.ledger stats'
-
 # Useful
 alias yt='mpv --vo=gpu --hwdec=vaapi --script-opts=ytdl_hook-ytdl_path=$HOME/.local/bin/yt-dlp'
 alias filediff='grep -v -F -x -f' # file1 file2 shows what is in 2 but not 1
 alias replace_ws_with_underscore='for f in *\ *; do mv "$f" "${f// /_}"; done'
-alias list-mailboxes='\find ~/data/pim/mail/ -type d -name cur -printf '"'"'%h '"'"' | sed -e '"'"'s_/home/michael/data/pim/mail/_+_g'"'"' | sed -e '"'"'s_ +_ \\\n+_g'"'"''
 alias agenda='khal list yesterday tomorrow'
 alias cal='notify-send "$(khal list yesterday tomorrow)"'
 alias pdfkomp='gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -r150 -sOutputFile=AUSGANG.pdf'
@@ -154,7 +143,6 @@ which duf > /dev/null && alias df='duf'
 which dua > /dev/null && alias du='dua'
 which viddy > /dev/null && alias watch='viddy'
 which pretty-ping > /dev/null && alias ping='pretty-ping --nolegend'
-which neomutt > /dev/null && alias mutt='neomutt'
 which nvim > /dev/null && alias vim='nvim'
 which nvim > /dev/null && alias vimdiff="nvim -d"
 which exa > /dev/null && alias ls='exa --group-directories-first'
@@ -178,43 +166,3 @@ which kustomize > /dev/null && alias kb='kustomize build'
 # Cloud
 which awless > /dev/null && alias srcawless='source <(awless completion zsh)'
 which aws_zsh_completer.sh > /dev/null && alias srcaws='source aws_zsh_completer.sh'
-
-# Linux only aliases
-if [[ ! "$OSTYPE" =~ "darwin" ]]
-then
-  # Package Management
-  version=$(cat /etc/issue)
-  if [[ $version =~ "Manjaro" || $version =~ "Arch Linux" ]]
-  then
-      alias \
-        pacup='sudo pacman -Syu' \
-        pacin='sudo pacman -S' \
-        pacls='pacman -Q' \
-        pacse='pacman -Ss' \
-        pacrm='sudo pacman -Rss' \
-        paccl='sudo pacman -Rsn $(${AUR_MANAGER:-pacman} -Qdtq)'
-  elif [[ $version =~ "SUSE" ]]
-  then
-      alias \
-        pacup='sudo zypper up' \
-        pacin='sudo zypper in' \
-        pacls='rpm -qa' \
-        pacshow='sudo rpm -qi' \
-        pacfiles='sudo rpm -ql' \
-        pacse='zypper se' \
-        pacrm='sudo zypper rm -u' \
-        pacdisup='sudo zypper dup' \
-        pacrepos='sudo zypper lr'
-  else
-      alias \
-        pacup='sudo apt-get update && sudo apt-get upgrade' \
-        pacin='sudo apt-get install' \
-        pacls='dpkg --get-selections' \
-        pacse='sudo apt-cache search' \
-        pacrm='sudo apt-get remove' \
-        pacautorm='sudo apt-get autoremove' \
-        pacdisup='sudo apt-get update && sudo apt-get dist-upgrade' \
-        pacpurge='sudo apt-get purge'
-  fi
-  alias lf='lfrun'
-fi

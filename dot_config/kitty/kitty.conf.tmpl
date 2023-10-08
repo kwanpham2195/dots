@@ -10,11 +10,15 @@ background_opacity 1.0
 update_check_interval 0
 
 # font
-font_family            Hack Nerd Font
-font_size              14.0
+font_family            JetBrainsMono Nerd Font Regular
+bold_font              JetBrainsMono Nerd Font Bold
+italic_font            JetBrainsMono Nerd Font Italic
+bold_italic_font       JetBrainsMono Nerd Font Bold Italic
+
+font_size              13.0
 disable_ligatures      never
-modify_font cell_width 110%
-modify_font cell_height 110%
+modify_font cell_width 100%
+modify_font cell_height 100%
 
 # url handling
 url_style     curly
@@ -69,7 +73,8 @@ map                   ctrl+shift+enter new_window_with_cwd
 {{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
-hide_window_decorations titlebar-only
+# hide_window_decorations titlebar-only
+hide_window_decorations no
 {{ else }}
 hide_window_decorations yes
 {{- end }}

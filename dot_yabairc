@@ -50,8 +50,6 @@ yabai -m config mouse_follows_focus off \
 yabai -m config --space 1 layout float
 
 # Floating for special apps
-yabai -m rule --add app="^KeePassXC$" sticky=off layer=normal manage=off
-yabai -m rule --add app="^ForkLift$" sticky=off layer=normal manage=off
 yabai -m rule --add app="^Font Book$" sticky=off layer=normal manage=off
 yabai -m rule --add app="^System Preferences$" sticky=off layer=normal manage=off
 yabai -m rule --add app="^TinkerTool$" sticky=off layer=normal manage=off
@@ -64,9 +62,5 @@ yabai -m rule --add app='Goland IDEA' title='^$' sticky=off layer=normal manage=
 yabai -m rule --add app='Goland IDEA' title='Project Structure' sticky=off layer=normal manage=off
 yabai -m rule --add app='Goland IDEA' title='Preferences' sticky=off layer=normal manage=off
 yabai -m rule --add app='Goland IDEA' title='Edit configuration' sticky=off layer=normal manage=off
-
-# Handling sketchybar window events
-yabai -m signal --add event=window_focused action="sketchybar -m --trigger window_focus &> /dev/null"
-yabai -m signal --add event=window_title_changed action="sketchybar -m --trigger title_change &> /dev/null"
 
 echo "yabai configuration loaded.."

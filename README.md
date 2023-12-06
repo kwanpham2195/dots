@@ -19,3 +19,12 @@ Tested with Arch Linux and macOS on Apple Silicone.
 ## Neovim
 
 My Neovim setup is in its own [repo](https://github.com/kwanpham2195/nvim)
+
+## Common Commands
+
+Edit file: `chezmoi edit --apply $FILE`
+Add file from home dir to source dir: `chezmoi add $FILE`
+
+## Encryption
+
+https://www.chezmoi.io/user-guide/frequently-asked-questions/encryption/

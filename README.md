@@ -28,3 +28,19 @@ Add file from home dir to source dir: `chezmoi add $FILE`
 ## Encryption
 
 https://www.chezmoi.io/user-guide/frequently-asked-questions/encryption/
+
+### Add an encryption file 
+
+```bash
+chezmoi add --encrypt ~/.gitconfig-encrypt
+```
+
+### On a new machine
+
+Run:
+
+```
+chezmoi init
+```
+
+Then enter the passphrase to decrypt key.txt.age

@@ -12,7 +12,7 @@ chmod +x /tmp/bootstrap.sh
 bash -c /tmp/./bootstrap.sh
 ```
 
-Tested with Arch Linux and macOS on Apple Silicone.
+Tested with macOS on Apple Silicone.
 
 **Regarding the included brewfile keep in mind that Brew on Linux only supports amd64 on Linux**
 

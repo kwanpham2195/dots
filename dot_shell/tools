@@ -1,4 +1,3 @@
-# vim: set ft=zsh:
 
 export _ZO_FZF_OPTS="$_FZF_DEFAULT_OPTS --select-1 --exit-0 --height=25% --reverse --no-sort --cycle"
 export _ZO_DATA_DIR=$HOME/.zoxide
@@ -20,3 +19,10 @@ command -v paru >/dev/null 2>&1 && export AUR_MANAGER=paru
 # [ -d $HOME/.jenv/bin ] && export PATH=$PATH:$HOME/.jenv/bin
 
 # command -v jenv >/dev/null 2>&1 && eval "$(jenv init -)"
+[ -d $HOME/.shell/fast-syntax-Highlighting ] && source $HOME/.shell/fast-syntax-Highlighting/fast-syntax-highlighting.plugin.zsh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[ -f $HOME/.shell/powerlevel10k/powerlevel10k.zsh-theme ] && source $HOME/.shell/powerlevel10k/powerlevel10k.zsh-theme
+
+# vim: set ft=zsh:

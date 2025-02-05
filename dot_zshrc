@@ -37,4 +37,6 @@ if [[ $- == *i* ]]; then
   fi
 fi
 
+source $HOME/.zshenv
+
 # vim: filetype=sh

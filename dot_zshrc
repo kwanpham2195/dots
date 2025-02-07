@@ -39,4 +39,8 @@ fi
 
 source $HOME/.zshenv
 
+if [ -z "$TMUX" ] && [ "$TERM" = "xterm-256color" ]; then
+  tmux attach || exec tmux new-session && exit
+fi
+
 # vim: filetype=sh

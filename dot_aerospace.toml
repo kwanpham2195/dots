@@ -4,7 +4,14 @@
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
 # Available commands: https://nikitabobko.github.io/AeroSpace/commands
-after-login-command = []
+after-login-command = ['exec-and-forget sketchybar']
+
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+]
 
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
@@ -25,7 +32,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 50
+accordion-padding = 100
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -41,7 +48,7 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-# on-focus-changed = "move-mouse window-lazy-center"
+on-focus-changed = "move-mouse window-lazy-center"
 
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
@@ -62,12 +69,12 @@ preset = 'qwerty'
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 5
-inner.vertical = 5
-outer.left = 5
-outer.bottom = 5
-outer.top = 5
-outer.right = 5
+inner.horizontal = 10
+inner.vertical = 10
+outer.left = 10
+outer.bottom = 10
+outer.top = 40        # sketchybar space
+outer.right = 10
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -186,15 +193,15 @@ down = 'volume down'
 up = 'volume up'
 shift-down = ['volume set 0', 'mode main']
 
-[[on-window-detected]]
-if.app-id = 'com.1password.1password'
-run = ['layout floating', 'move-node-to-workspace 1']
-[[on-window-detected]]
-if.app-id = 'com.apple.Passwords'
-run = ['layout floating', 'move-node-to-workspace 1']
-[[on-window-detected]]
-if.app-id = 'org.openvpn.client.app'
-run = ['layout floating', 'move-node-to-workspace 1']
+# [[on-window-detected]]
+# if.app-id = 'com.1password.1password'
+# run = ['layout floating', 'move-node-to-workspace 1']
+# [[on-window-detected]]
+# if.app-id = 'com.apple.Passwords'
+# run = ['layout floating', 'move-node-to-workspace 1']
+# [[on-window-detected]]
+# if.app-id = 'org.openvpn.client.app'
+# run = ['layout floating', 'move-node-to-workspace 1']
 
 # Browsers
 [[on-window-detected]]

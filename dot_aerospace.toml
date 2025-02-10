@@ -137,6 +137,7 @@ alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
 alt-b = 'workspace B' # Browsers 
+alt-d = 'workspace D' # Datagrip 
 alt-c = 'workspace C' # Communication apps
 alt-m = 'workspace M' # Mail apps
 alt-n = 'workspace N' # notion + ticktick
@@ -155,6 +156,7 @@ alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-b = 'move-node-to-workspace B'
 alt-shift-c = 'move-node-to-workspace C'
+alt-shift-d = 'move-node-to-workspace D'
 alt-shift-m = 'move-node-to-workspace M'
 alt-shift-n = 'move-node-to-workspace N'
 alt-shift-t = 'move-node-to-workspace T'
@@ -193,15 +195,15 @@ down = 'volume down'
 up = 'volume up'
 shift-down = ['volume set 0', 'mode main']
 
-# [[on-window-detected]]
-# if.app-id = 'com.1password.1password'
-# run = ['layout floating', 'move-node-to-workspace 1']
-# [[on-window-detected]]
-# if.app-id = 'com.apple.Passwords'
-# run = ['layout floating', 'move-node-to-workspace 1']
-# [[on-window-detected]]
-# if.app-id = 'org.openvpn.client.app'
-# run = ['layout floating', 'move-node-to-workspace 1']
+[[on-window-detected]]
+if.app-id = 'com.1password.1password'
+run = ['move-node-to-workspace 1']
+[[on-window-detected]]
+if.app-id = 'com.apple.Passwords'
+run = ['move-node-to-workspace 1']
+[[on-window-detected]]
+if.app-id = 'org.openvpn.client.app'
+run = ['layout floating', 'move-node-to-workspace 1']
 
 # Browsers
 [[on-window-detected]]
@@ -210,6 +212,11 @@ run = "move-node-to-workspace B"
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = "move-node-to-workspace B"
+
+
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.datagrip'
+run = "move-node-to-workspace D"
 
 # Work communications
 [[on-window-detected]]

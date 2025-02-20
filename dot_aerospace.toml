@@ -223,9 +223,18 @@ run = "move-node-to-workspace C"
 if.app-id = 'com.tinyspeck.slackmacgap'
 run = "move-node-to-workspace C"
 
+# Datagrip
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.datagrip'
 run = "move-node-to-workspace D"
+
+# Editors
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = "move-node-to-workspace E"
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.goland'
+run = "move-node-to-workspace E"
 
 # tasks
 [[on-window-detected]]

@@ -1,33 +1,22 @@
 {{- if eq .chezmoi.os "darwin" -}}
-cask "alacritty"
-cask "alt-tab"
-cask "bartender", args: { appdir: "/Applications" }
-cask "calibre"
-cask "docker", args: { appdir: "/Applications" }
-cask "firefox", args: { appdir: "/Applications" }
 cask "font-jetbrains-mono-nerd-font"
+cask "font-hack-nerd-font"
 cask "google-cloud-sdk"
 cask "keycastr"
 cask "kitty"
-cask "libreoffice"
 cask "linearmouse"
 cask "macfuse"
-cask "middle", args: { appdir: "/Applications" }
-cask "numi"
-cask "postman", args: { appdir: "/Applications" }
 cask "syncthing", args: { appdir: "/Applications" }
+cask "shottr"
 cask "zerotier-one"
+cask "nikitabobko/tap/aerospace"
 
 brew "coreutils"
-brew "koekeishiya/formulae/skhd"
-brew "koekeishiya/formulae/yabai"
 brew "mas"
 brew "shared-mime-info"
 brew "tree"
 
-mas "Alfred", id: 405843582
 mas "Keynote", id: 409183694
-mas "Magnet", id: 441258766
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Strongbox", id: 1270075435
@@ -119,10 +108,7 @@ brew "notmuch"
 brew "neomutt"
 brew "neovim"
 brew "neovim-remote"
-brew "newsboat"
 brew "nmap"
-brew "nnn"
-brew "notmuch-mutt"
 brew "poppler"
 brew "qt"
 brew "pdfgrep"
@@ -157,6 +143,7 @@ brew "zoxide"
 brew "datawire/blackbird/telepresence-legacy"
 brew "fluxcd/tap/flux"
 brew "libpq"
+brew "ruby"
 
 tap "datawire/blackbird"
 tap "felixkratz/formulae"

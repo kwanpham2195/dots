@@ -25,4 +25,8 @@ command -v paru >/dev/null 2>&1 && export AUR_MANAGER=paru
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 [ -f $HOME/.shell/powerlevel10k/powerlevel10k.zsh-theme ] && source $HOME/.shell/powerlevel10k/powerlevel10k.zsh-theme
 
+# Override default ruby on mac
+[ -d "/opt/homebrew/opt/ruby/bin" ] && export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+[ -d "/opt/homebrew/opt/ruby/bin" ] && export PATH=`gem environment gemdir`/bin:$PATH
+
 # vim: set ft=zsh:

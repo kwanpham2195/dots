@@ -39,7 +39,7 @@ fi
 
 source $HOME/.zshenv
 
-if [ -z "$TMUX" ] && [ "$TERM" = "xterm-256color" ]; then
+if [ -z "$TMUX" ] && [ "$TERM" = "xterm-256color" ] && [[ "$KITTY_PID" != "" ]]; then
   tmux attach || exec tmux new-session && exit
 fi
 

@@ -235,6 +235,9 @@ run = "move-node-to-workspace E"
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.goland'
 run = "move-node-to-workspace E"
+[[on-window-detected]]
+if.app-id = 'com.trae.app'
+run = "move-node-to-workspace E"
 
 # tasks
 [[on-window-detected]]

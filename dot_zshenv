@@ -8,6 +8,7 @@
 [ -d $HOME/.local/share/nvim/mason/bin ] && export PATH=$PATH:$HOME/.local/share/nvim/mason/bin
 [ -f $HOME/.shell/aliases ] && source $HOME/.shell/aliases
 [ -f $HOME/.shell/funcs ] && source $HOME/.shell/funcs
+[ -f $HOME/.shell/private ] && source $HOME/.shell/private
 
 command -v vim >/dev/null 2>&1 && export EDITOR=vim
 command -v nvim >/dev/null 2>&1 && export EDITOR=nvim

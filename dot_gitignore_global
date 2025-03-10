@@ -1,5 +1,12 @@
-.envrc
+# Editor/IDE specific files
 .idea/
+.vscode/
+
+# Macos
 .DS_Store
+**/.DS_Store
+
+# Env files
+.envrc
 *.pem
 *.key

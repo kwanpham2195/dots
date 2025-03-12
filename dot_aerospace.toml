@@ -142,6 +142,8 @@ alt-d = 'workspace D' # Datagrip
 alt-e = 'workspace E' # Editor (VS Code / Goland)
 alt-m = 'workspace M' # Mail apps
 alt-n = 'workspace N' # notion + ticktick
+alt-p = 'workspace P' # Postman
+alt-o = 'workspace O' # orbstack
 alt-t = 'workspace T' # terminal
 alt-s = 'workspace S' # social
 
@@ -161,6 +163,8 @@ alt-shift-d = 'move-node-to-workspace D'
 alt-shift-e = 'move-node-to-workspace E'
 alt-shift-m = 'move-node-to-workspace M'
 alt-shift-n = 'move-node-to-workspace N'
+alt-shift-p = 'move-node-to-workspace P'
+alt-shift-o = 'move-node-to-workspace O'
 alt-shift-t = 'move-node-to-workspace T'
 alt-shift-s = 'move-node-to-workspace S'
 
@@ -254,6 +258,16 @@ run = "move-node-to-workspace M"
 [[on-window-detected]]
 if.app-id = 'com.microsoft.Outlook'
 run = "move-node-to-workspace M"
+
+# postman
+[[on-window-detected]]
+if.app-id = 'com.postmanlabs.mac'
+run = "move-node-to-workspace P"
+
+# orbstack
+[[on-window-detected]]
+if.app-id = 'dev.kdrag0n.MacVirt'
+run = "move-node-to-workspace O"
 
 # Terminal
 [[on-window-detected]]

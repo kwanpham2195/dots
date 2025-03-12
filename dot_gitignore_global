@@ -10,3 +10,5 @@
 .envrc
 *.pem
 *.key
+
+.aider*

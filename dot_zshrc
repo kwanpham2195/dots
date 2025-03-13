@@ -44,3 +44,6 @@ if [ -z "$TMUX" ] && [ "$TERM" = "xterm-256color" ] && [[ "$KITTY_PID" != "" ]];
 fi
 
 # vim: filetype=sh
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/kwanpham/.lmstudio/bin"

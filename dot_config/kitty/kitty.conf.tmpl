@@ -6,12 +6,12 @@ background_opacity 1
 update_check_interval 0
 
 # font
-font_family JetBrainsMono Nerd Font Mono Light
-bold_font JetBrainsMono Nerd Font Mono SemiBold
-italic_font JetBrainsMono Nerd Font Mono Light Italic
+font_family JetBrainsMono Nerd Font Mono
+bold_font JetBrainsMono Nerd Font Mono Bold
+italic_font JetBrainsMono Nerd Font Mono Italic
 bold_italic_font JetBrainsMono Nerd Font Mono Bold Italic
 
-font_size              13.0
+font_size              16.0
 disable_ligatures      never
 modify_font cell_width 100%
 modify_font cell_height 110%
@@ -102,7 +102,7 @@ map super+n no_op
 # misc
 {{- if eq .chezmoi.os "darwin" }}
 macos_quit_when_last_window_closed yes
-macos_thicken_font                 0.75
+# macos_thicken_font                 0.75
 macos_option_as_alt                no # either working alt-b or altgr
 {{- end }}
 scrollback_lines                   5000
@@ -118,5 +118,5 @@ map  ctrl+shift+tab  send_text normal,application \x1b[9;6u
 
 # BEGIN_KITTY_THEME
 # Tokyo Night
-include current-theme.conf
+include catppuccin-macchiato.conf
 # END_KITTY_THEME

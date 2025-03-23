@@ -13,15 +13,16 @@ HISTFILE=~/.zhistory
 HISTSIZE=50000
 SAVEHIST=50000
 
-source $HOME/.shell/bindings
-source $HOME/.shell/completion
-source $HOME/.shell/tools
+zstyle ':omz:update' mode reminder
 
 if [[ "$OSTYPE" =~ "darwin" ]]; then
   # when put in zshenv it gets overwritten by tmux which calls /etc/profile again (login shell)
   export PATH=$HOME/Library/Python/3.10/bin:/opt/homebrew/opt/gnu-tar/libexec/gnubin:/opt/homebrew/opt/findutils/libexec/gnubin:/opt/homebrew/Cellar/coreutils/9.1/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH
-
 fi
+
+source $HOME/.shell/bindings
+source $HOME/.shell/completion
+source $HOME/.shell/tools
 
 trap_exit_tmux() {
   # switch only when current session has only one window and one pane
@@ -40,10 +41,7 @@ fi
 source $HOME/.zshenv
 
 if [ -z "$TMUX" ] && [ "$TERM" = "xterm-256color" ] && [[ "$KITTY_PID" != "" ]]; then
-  tmux attach || exec tmux new-session && exit
+  tmux attach || { tmux new-session "fastfetch; $SHELL" && exit; }
 fi
 
 # vim: filetype=sh
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/kwanpham/.lmstudio/bin"

@@ -44,8 +44,12 @@ _fzf_compgen_path() {
 _fzf_compgen_dir() {
   fd --type d --hidden --follow . "$1"
 }
-# add support for ctrl+o to open selected file
-export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute:nvim {} > /dev/tty'"
+export FZF_DEFAULT_OPTS=" \
+  --color=bg+:#363a4f,bg:#24273a,spinner:#f4dbd6,hl:#ed8796 \
+  --color=fg:#cad3f5,header:#ed8796,info:#c6a0f6,pointer:#f4dbd6 \
+  --color=marker:#b7bdf8,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796 \
+  --color=selected-bg:#494d64 \
+  --color=border:#363a4f,label:#cad3f5 --height 100% --bind='ctrl-o:execute:nvim {} > /dev/tty' "
 # Preview files
 export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
 # Preview directories with tree
@@ -57,65 +61,9 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # homebrew
 export HOMEBREW_NO_GOOGLE_ANALYTICS=1
 
-if [[ "$OSTYPE" =~ "darwin" ]]
-then
-  export LC_CTYPE=UTF-8
-  export GPG_TTY=$(tty)
-  export TERMINAL=xterm
-  export TERM=xterm-256color
-  # if [[ x"$KITTY_PID" == "x" ]]
-  # then # not kitty
-  #   alias ssh= 'ssh'
-  #   export TERMINAL=xterm
-  #   export TERM=xterm-256color
-  # else
-  #   # not compatible with my ssh config to start tmux after connecting
-  #   alias ssh='kitty +kitten ssh'
-  #   export TERMINAL=kitty
-  #   export TERM=xterm-kitty
-  # fi
-  export BROWSER="open -a firefox"
-fi
-
-if [[ "$OSTYPE" =~ "linux" ]]
-then
-  if [[ "$DESKTOP_SESSION" =~ "xfce" ]];then
-      eval $(gnome-keyring-daemon --start)
-      export SSH_AUTH_SOCK
-  fi
-  export TERM=screen-256color
-  export TERMINAL=kitty
-  export BROWSER=firefox
-  export BROWSERCLI=lynx
-  export MAIL=/usr/bin/neomutt
-  # Fix libstdc++.so.6: cannot open shared object file: No such file or directory
-  export LD_LIBRARY_PATH=/nix/store/j134k1ncfn6gjfd2f5s1gz37170rch4h-gcc-11.3.0-lib/lib/
-  # KDE SSH keys
-  [ -S /run/user/1000/ssh-agent.socket ] && export SSH_AUTH_SOCK=/run/user/1000/ssh-agent.socket
-  [ -f /usr/bin/ksshaskpass ] && export SSH_ASKPASS=/usr/bin/ksshaskpass
-
-  # basedir defaults, in case they're not already set up.
-  # http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-  if [[ -z "$XDG_DATA_HOME" ]]; then
-    export XDG_DATA_HOME="$HOME/.local/share"
-  fi
-
-  if [[ -z "$XDG_CONFIG_HOME" ]]; then
-    export XDG_CONFIG_HOME="$HOME/.config"
-  fi
-
-  if [[ -z "$XDG_CACHE_HOME" ]]; then
-    export XDG_CACHE_HOME="$HOME/.cache"
-  fi
-
-  if [[ -z "$XDG_DATA_DIRS" ]]; then
-    export XDG_DATA_DIRS="/usr/local/share:/usr/share"
-  fi
-
-  if [[ -z "$XDG_CONFIG_DIRS" ]]; then
-    export XDG_CONFIG_DIRS="/etc/xdg"
-  else
-    export XDG_CONFIG_DIRS="/etc/xdg:$XDG_CONFIG_DIRS"
-  fi
-fi
-
+# macOS specific settings
+export LC_CTYPE=UTF-8
+export GPG_TTY=$(tty)
+export TERMINAL=xterm
+export TERM=xterm-256color
+export BROWSER="open -a firefox"

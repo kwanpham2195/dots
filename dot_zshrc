@@ -17,7 +17,16 @@ zstyle ':omz:update' mode reminder
 
 if [[ "$OSTYPE" =~ "darwin" ]]; then
   # when put in zshenv it gets overwritten by tmux which calls /etc/profile again (login shell)
-  export PATH=$HOME/Library/Python/3.10/bin:/opt/homebrew/opt/gnu-tar/libexec/gnubin:/opt/homebrew/opt/findutils/libexec/gnubin:/opt/homebrew/Cellar/coreutils/9.1/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH
+  # Python path
+  export PATH=/opt/homebrew/opt/python@3.11/libexec/bin:$PATH
+  # GNU tools paths
+  export PATH=/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH
+  export PATH=/opt/homebrew/opt/findutils/libexec/gnubin:$PATH
+  export PATH=/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH
+  export PATH=/opt/homebrew/Cellar/coreutils/9.1/libexec/gnubin:$PATH
+  # Homebrew paths
+  export PATH=/opt/homebrew/bin:$PATH
+  export PATH=/opt/homebrew/opt/mysql-client/bin:$PATH
 fi
 
 source $HOME/.shell/bindings
@@ -37,8 +46,6 @@ if [[ $- == *i* ]]; then
     trap trap_exit_tmux EXIT
   fi
 fi
-
-source $HOME/.zshenv
 
 if [ -z "$TMUX" ] && [ "$TERM" = "xterm-256color" ] && [[ "$KITTY_PID" != "" ]]; then
   tmux attach || { tmux new-session "fastfetch; $SHELL" && exit; }

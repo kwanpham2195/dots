@@ -27,4 +27,7 @@ command -v paru >/dev/null 2>&1 && export AUR_MANAGER=paru
 [ -d "/opt/homebrew/opt/ruby/bin" ] && export PATH=/opt/homebrew/opt/ruby/bin:$PATH
 [ -d "/opt/homebrew/opt/ruby/bin" ] && export PATH=`gem environment gemdir`/bin:$PATH
 
+# fnm
+command -v fnm >/dev/null 2>&1 && eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)" 
+
 # vim: set ft=zsh:

@@ -387,6 +387,37 @@ fzf-git-checkout() {
     fi
 }
 
+gcp_project_switch() {
+  local project_id=$(gcloud projects list --format="value(projectId)" | fzf)
+
+  if [[ -n "$project_id" ]]; then
+    gcloud config set project "$project_id"
+    echo "Switched to project: $project_id"
+  else
+    echo "No project selected."
+  fi
+}
+
+gcptaile() {
+  local service="$1"
+  gcloud alpha logging tail --format=json "severity>=ERROR AND resource.labels.service_name=$service" | bat --paging=never -l log
+}
+
+gcptails() {
+  local service="$1"
+  gcloud alpha logging tail --format=json "resource.labels.service_name=$service" | bat --paging=never -l log
+}
+
+gcploge() {
+  local service="$1"
+  gcloud logging read --format=json --limit=500 "severity>=ERROR AND resource.labels.service_name=$service" | bat -l json
+}
+
+gcplogs() {
+  local service="$1"
+  gcloud logging read --format=json --limit=500 "resource.labels.service_name=$service" | bat -l json
+}
+
 # grep for processes
 function pg { pgrep -fa "$1" | grep -E --color "$1"; }
 

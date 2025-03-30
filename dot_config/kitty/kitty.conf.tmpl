@@ -103,8 +103,7 @@ map super+n no_op
 # misc
 {{- if eq .chezmoi.os "darwin" }}
 macos_quit_when_last_window_closed yes
-# macos_thicken_font                 0.75
-macos_option_as_alt                no # either working alt-b or altgr
+macos_option_as_alt                both
 {{- end }}
 scrollback_lines                   5000
 allow_remote_control               yes
@@ -118,6 +117,7 @@ map  ctrl+tab        send_text normal,application \x1b[9;5u
 map  ctrl+shift+tab  send_text normal,application \x1b[9;6u
 
 # BEGIN_KITTY_THEME
+# Not apply when auto theme enabled
 # Tokyo Night
-include catppuccin-macchiato.conf
+# include catppuccin-macchiato.conf
 # END_KITTY_THEME

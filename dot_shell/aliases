@@ -168,7 +168,8 @@ which awless > /dev/null && alias srcawless='source <(awless completion zsh)'
 which aws_zsh_completer.sh > /dev/null && alias srcaws='source aws_zsh_completer.sh'
 
 # Gcloud
-alias cfw-db-proxy="cloud-sql-proxy --address 127.0.0.1 --port 5420 cfw-cloudops-portal-nonprod:asia-southeast1:cfw-db --gcloud-auth"
+alias cfw-ssh-db="cloud-sql-proxy --address 127.0.0.1 --port 5420 cfw-cloudops-portal-nonprod:asia-southeast1:cfw-db --gcloud-auth"
+alias cfw-ssh-redis="gcloud compute ssh jump-host --project=cfw-cloudops-portal-nonprod --tunnel-through-iap --zone=asia-southeast1-b -- -NL6379:10.128.3.3:6379"
 alias gcp-switch="gcp_project_switch"
 alias crls="gcloud run services list"
 alias gcptail="gcloud alpha logging tail --format=json"

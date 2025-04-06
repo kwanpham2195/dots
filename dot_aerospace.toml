@@ -240,7 +240,7 @@ run = "move-node-to-workspace E"
 if.app-id = 'com.jetbrains.goland'
 run = "move-node-to-workspace E"
 [[on-window-detected]]
-if.app-id = 'com.trae.app'
+if.app-id = 'com.todesktop.230313mzl4w4u92'
 run = "move-node-to-workspace E"
 
 # tasks

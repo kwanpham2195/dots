@@ -12,3 +12,17 @@
 *.key
 
 .aider*
+
+.cursorignore
+.cursorindexingignore
+.cursor/
+memory-bank/
+.memory_bank/
+
+activeContext.md
+productContext.md
+progress.md
+projectbrief.md
+systemPatterns.md
+techContext.md
+tasks.md

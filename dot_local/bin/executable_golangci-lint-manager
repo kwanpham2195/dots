@@ -1,0 +1,315 @@
+#!/bin/bash
+
+# golangci-lint Version Manager
+# A tool to install, manage, and switch between multiple golangci-lint versions
+
+set -e
+
+INSTALL_DIR="$HOME/.golangci-lint"
+BIN_DIR="$HOME/.local/bin"
+CURRENT_LINK="$BIN_DIR/golangci-lint"
+GITHUB_API="https://api.github.com/repos/golangci/golangci-lint/releases"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Detect architecture
+detect_arch() {
+  local arch=$(uname -m)
+  case $arch in
+  x86_64) echo "amd64" ;;
+  arm64 | aarch64) echo "arm64" ;;
+  *)
+    echo "Unsupported architecture: $arch" >&2
+    exit 1
+    ;;
+  esac
+}
+
+# Print colored output
+print_info() {
+  echo -e "${BLUE}ℹ${NC} $1"
+}
+
+print_success() {
+  echo -e "${GREEN}✓${NC} $1"
+}
+
+print_warning() {
+  echo -e "${YELLOW}⚠${NC} $1"
+}
+
+print_error() {
+  echo -e "${RED}✗${NC} $1"
+}
+
+# Setup directories
+setup_dirs() {
+  mkdir -p "$INSTALL_DIR" "$BIN_DIR"
+
+  # Add to PATH if not already there
+  if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
+    print_warning "Add $BIN_DIR to your PATH by adding this to your shell profile:"
+    echo "export PATH=\"$BIN_DIR:\$PATH\""
+  fi
+}
+
+# Get available versions from GitHub
+get_available_versions() {
+  curl -s "$GITHUB_API" | grep '"tag_name":' | sed 's/.*"tag_name": "\([^"]*\)".*/\1/' | head -20
+}
+
+# Get installed versions
+get_installed_versions() {
+  if [ -d "$INSTALL_DIR" ]; then
+    ls "$INSTALL_DIR" 2>/dev/null | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V
+  fi
+}
+
+# Get current version
+get_current_version() {
+  if [ -L "$CURRENT_LINK" ]; then
+    local target=$(readlink "$CURRENT_LINK")
+    basename "$(dirname "$target")"
+  else
+    echo "none"
+  fi
+}
+
+# Normalize version (ensure it starts with v)
+normalize_version() {
+  local version="$1"
+  if [[ "$version" == v* ]]; then
+    echo "$version"
+  else
+    echo "v$version"
+  fi
+}
+
+# Download and install a version
+install_version() {
+  local input_version="$1"
+  local version=$(normalize_version "$input_version")
+  local arch=$(detect_arch)
+  local version_dir="$INSTALL_DIR/$version"
+
+  if [ -d "$version_dir" ]; then
+    print_warning "Version $version is already installed"
+    return 0
+  fi
+
+  print_info "Installing golangci-lint $version..."
+
+  # Remove 'v' prefix for the filename in URL
+  local version_number="${version#v}"
+  local download_url="https://github.com/golangci/golangci-lint/releases/download/$version/golangci-lint-$version_number-darwin-$arch.tar.gz"
+  local temp_file="/tmp/golangci-lint-$version.tar.gz"
+
+  # Download
+  print_info "Downloading from: $download_url"
+  if ! curl -L -f -o "$temp_file" "$download_url"; then
+    print_error "Failed to download $version. Please check if the version exists."
+    print_info "Try: $0 list-available"
+    return 1
+  fi
+
+  # Verify it's actually a gzip file
+  if ! file "$temp_file" | grep -q "gzip"; then
+    print_error "Downloaded file is not a valid gzip archive"
+    cat "$temp_file"
+    rm -f "$temp_file"
+    return 1
+  fi
+
+  # Extract
+  mkdir -p "$version_dir"
+  if ! tar -xzf "$temp_file" -C "$version_dir" --strip-components=1; then
+    print_error "Failed to extract $version"
+    rm -rf "$version_dir"
+    return 1
+  fi
+
+  # Cleanup
+  rm -f "$temp_file"
+
+  # Make executable
+  chmod +x "$version_dir/golangci-lint"
+
+  print_success "Successfully installed golangci-lint $version"
+}
+
+# Switch to a version
+use_version() {
+  local version="$1"
+  local version_dir="$INSTALL_DIR/$version"
+  local binary="$version_dir/golangci-lint"
+
+  if [ ! -f "$binary" ]; then
+    print_error "Version $version is not installed"
+    print_info "Available versions:"
+    list_installed
+    return 1
+  fi
+
+  # Create or update symlink
+  rm -f "$CURRENT_LINK"
+  ln -s "$binary" "$CURRENT_LINK"
+
+  print_success "Switched to golangci-lint $version"
+  print_info "Active version: $($CURRENT_LINK version 2>/dev/null || echo 'unknown')"
+}
+
+# Remove a version
+remove_version() {
+  local version="$1"
+  local version_dir="$INSTALL_DIR/$version"
+
+  if [ ! -d "$version_dir" ]; then
+    print_error "Version $version is not installed"
+    return 1
+  fi
+
+  # Check if it's the current version
+  local current=$(get_current_version)
+  if [ "$current" = "$version" ]; then
+    print_warning "Removing current active version"
+    rm -f "$CURRENT_LINK"
+  fi
+
+  rm -rf "$version_dir"
+  print_success "Removed golangci-lint $version"
+}
+
+# List installed versions
+list_installed() {
+  local installed=$(get_installed_versions)
+  local current=$(get_current_version)
+
+  if [ -z "$installed" ]; then
+    print_info "No versions installed"
+    return
+  fi
+
+  echo "Installed versions:"
+  for version in $installed; do
+    if [ "$version" = "$current" ]; then
+      echo -e "  ${GREEN}* $version${NC} (current)"
+    else
+      echo "    $version"
+    fi
+  done
+}
+
+# List available versions
+list_available() {
+  print_info "Fetching available versions..."
+  local available=$(get_available_versions)
+
+  if [ -z "$available" ]; then
+    print_error "Failed to fetch available versions"
+    return 1
+  fi
+
+  echo "Available versions (latest 20):"
+  echo "$available" | while read -r version; do
+    echo "  $version"
+  done
+}
+
+# Show current version
+show_current() {
+  local current=$(get_current_version)
+  if [ "$current" = "none" ]; then
+    print_info "No version currently active"
+  else
+    print_info "Current version: $current"
+    if command -v golangci-lint >/dev/null 2>&1; then
+      golangci-lint version
+    fi
+  fi
+}
+
+# Show help
+show_help() {
+  cat <<EOF
+golangci-lint Version Manager
+
+USAGE:
+    $(basename "$0") <command> [arguments]
+
+COMMANDS:
+    install <version>     Install a specific version (e.g., v1.55.2)
+    use <version>         Switch to a specific version
+    remove <version>      Remove a specific version
+    list                  List installed versions
+    list-available        List available versions from GitHub
+    current              Show current active version
+    help                 Show this help message
+
+EXAMPLES:
+    $(basename "$0") install v1.55.2
+    $(basename "$0") use v1.55.2
+    $(basename "$0") list
+    $(basename "$0") remove v1.54.0
+
+NOTES:
+    - Versions are installed to: $INSTALL_DIR
+    - Binary symlink created at: $CURRENT_LINK
+    - Make sure $BIN_DIR is in your PATH
+EOF
+}
+
+# Main function
+main() {
+  setup_dirs
+
+  case "${1:-help}" in
+  install)
+    if [ -z "$2" ]; then
+      print_error "Please specify a version to install"
+      echo "Usage: $0 install <version>"
+      exit 1
+    fi
+    install_version "$2"
+    ;;
+  use)
+    if [ -z "$2" ]; then
+      print_error "Please specify a version to use"
+      echo "Usage: $0 use <version>"
+      exit 1
+    fi
+    use_version "$(normalize_version "$2")"
+    ;;
+  remove | uninstall)
+    if [ -z "$2" ]; then
+      print_error "Please specify a version to remove"
+      echo "Usage: $0 remove <version>"
+      exit 1
+    fi
+    remove_version "$(normalize_version "$2")"
+    ;;
+  list | ls)
+    list_installed
+    ;;
+  list-available | available)
+    list_available
+    ;;
+  current | version)
+    show_current
+    ;;
+  help | --help | -h)
+    show_help
+    ;;
+  *)
+    print_error "Unknown command: $1"
+    show_help
+    exit 1
+    ;;
+  esac
+}
+
+main "$@"

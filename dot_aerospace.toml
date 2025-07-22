@@ -211,7 +211,7 @@ if.app-id = 'com.apple.Passwords'
 run = ['move-node-to-workspace 1']
 [[on-window-detected]]
 if.app-id = 'org.openvpn.client.app'
-run = ['move-node-to-workspace 1']
+run = ['layout floating', 'move-node-to-workspace 1']
 
 
 [[on-window-detected]]

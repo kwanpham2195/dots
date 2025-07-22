@@ -13,16 +13,18 @@
 
 .aider*
 
+# Cursor specific files
 .cursorignore
 .cursorindexingignore
 .cursor/
 memory-bank/
 .memory_bank/
 
-activeContext.md
-productContext.md
-progress.md
-projectbrief.md
-systemPatterns.md
-techContext.md
-tasks.md
+# Gemini files
+GEMINI.md
+
+# Copilot files
+.github/copilot-instructions.md
+
+# Claude files 
+Claude.md

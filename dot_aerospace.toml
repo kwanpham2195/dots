@@ -136,6 +136,7 @@ alt-6 = 'workspace 6'
 alt-7 = 'workspace 7'
 alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
+alt-a = 'workspace A' # AI
 alt-b = 'workspace B' # Browsers
 alt-c = 'workspace C' # Communication apps
 alt-d = 'workspace D' # Datagrip
@@ -157,6 +158,7 @@ alt-shift-6 = 'move-node-to-workspace 6'
 alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-a = 'move-node-to-workspace A'
 alt-shift-b = 'move-node-to-workspace B'
 alt-shift-c = 'move-node-to-workspace C'
 alt-shift-d = 'move-node-to-workspace D'
@@ -209,7 +211,12 @@ if.app-id = 'com.apple.Passwords'
 run = ['move-node-to-workspace 1']
 [[on-window-detected]]
 if.app-id = 'org.openvpn.client.app'
-run = ['layout floating', 'move-node-to-workspace 1']
+run = ['move-node-to-workspace 1']
+
+
+[[on-window-detected]]
+if.app-id = 'com.anthropic.claudefordesktop'
+run = "move-node-to-workspace A"
 
 # Browsers
 [[on-window-detected]]
@@ -280,6 +287,11 @@ run = "move-node-to-workspace O"
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
 run = "move-node-to-workspace T"
+
+# Reminder
+[[on-window-detected]]
+if.app-id = 'com.apple.reminders'
+run = "move-node-to-workspace N"
 
 # Social
 [[on-window-detected]]

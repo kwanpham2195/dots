@@ -407,8 +407,8 @@ tmux_conf_urlscan_options="--compact --dedupe"
 # move status line to top
 #set -g status-position top
 
-bind-key v split-window -h -p 40 -c "#{pane_current_path}"
-bind-key s split-window -v -p 40 -c "#{pane_current_path}"
+bind-key v split-window -h -p 50 -c "#{pane_current_path}"
+bind-key s split-window -v -p 50 -c "#{pane_current_path}"
 
 
 # Smart pane switching with awareness of Vim splits and fzf.

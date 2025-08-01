@@ -1,0 +1,181 @@
+#!/bin/bash
+
+# SSH Key Switcher with fzf
+# Usage: ./ssh-switch.sh or add to PATH and run ssh-switch
+
+SSH_DIR="$HOME/.ssh"
+SSH_CONFIG="$SSH_DIR/config"
+
+# Check if fzf is installed
+if ! command -v fzf &>/dev/null; then
+  echo "Error: fzf is not installed. Please install fzf first."
+  exit 1
+fi
+
+# Check if .ssh directory exists
+if [[ ! -d "$SSH_DIR" ]]; then
+  echo "Error: SSH directory $SSH_DIR not found."
+  exit 1
+fi
+
+# Function to get all SSH private keys
+get_ssh_keys() {
+  find "$SSH_DIR" -type f -name "id_*" ! -name "*.pub" ! -name "*.old" ! -name "*config*" 2>/dev/null
+}
+
+# Function to get currently loaded SSH keys
+get_loaded_keys() {
+  ssh-add -l 2>/dev/null | awk '{print $3}' | sed 's/.*\///'
+}
+
+# Function to display key info
+display_key_info() {
+  local key_file="$1"
+  local key_name=$(basename "$key_file")
+  local key_type=""
+  local key_comment=""
+
+  # Get key type and comment
+  if [[ -f "${key_file}.pub" ]]; then
+    local pub_content=$(cat "${key_file}.pub" 2>/dev/null)
+    key_type=$(echo "$pub_content" | awk '{print $1}')
+    key_comment=$(echo "$pub_content" | awk '{$1=$2=""; print $0}' | sed 's/^ *//')
+  fi
+
+  # Check if key is currently loaded
+  local loaded_keys=$(get_loaded_keys)
+  local status="○"
+  if echo "$loaded_keys" | grep -q "$key_name"; then
+    status="●"
+  fi
+
+  printf "%s %-20s %-15s %s\n" "$status" "$key_name" "$key_type" "$key_comment"
+}
+
+# Main function
+main() {
+  echo "SSH Key Switcher (● = loaded, ○ = not loaded)"
+  echo "================================================"
+
+  # Get all SSH keys
+  local keys=($(get_ssh_keys))
+
+  if [[ ${#keys[@]} -eq 0 ]]; then
+    echo "No SSH keys found in $SSH_DIR"
+    exit 1
+  fi
+
+  # Create selection list with key info
+  local selection_list=""
+  for key in "${keys[@]}"; do
+    selection_list+="$(display_key_info "$key")\n"
+  done
+
+  # Use fzf to select a key
+  local selected=$(echo -e "$selection_list" | fzf \
+    --height=40% \
+    --border \
+    --header="Select SSH key to toggle (Enter to select, Esc to cancel)" \
+    --preview="echo 'Key details:'; echo '============'; head -1 {2}.pub 2>/dev/null || echo 'No public key found'; echo; echo 'File: {2}'" \
+    --preview-window=right:50%:wrap)
+
+  if [[ -z "$selected" ]]; then
+    echo "No key selected."
+    exit 0
+  fi
+
+  # Extract key name from selection
+  local key_name=$(echo "$selected" | awk '{print $2}')
+  local key_path="$SSH_DIR/$key_name"
+
+  # Check if key file exists
+  if [[ ! -f "$key_path" ]]; then
+    echo "Error: Key file $key_path not found."
+    exit 1
+  fi
+
+  # Check if key is currently loaded
+  local loaded_keys=$(get_loaded_keys)
+  if echo "$loaded_keys" | grep -q "$key_name"; then
+    # Key is loaded, remove it
+    echo "Removing key: $key_name"
+    ssh-add -d "$key_path"
+    if [[ $? -eq 0 ]]; then
+      echo "✓ Key removed successfully"
+    else
+      echo "✗ Failed to remove key"
+    fi
+  else
+    # Key is not loaded, add it
+    echo "Adding key: $key_name"
+    ssh-add "$key_path"
+    if [[ $? -eq 0 ]]; then
+      echo "✓ Key added successfully"
+    else
+      echo "✗ Failed to add key"
+    fi
+  fi
+
+  echo
+  echo "Currently loaded keys:"
+  ssh-add -l 2>/dev/null || echo "No keys currently loaded"
+}
+
+# Show help
+show_help() {
+  echo "SSH Key Switcher with fzf"
+  echo "========================"
+  echo
+  echo "Usage: $0 [options]"
+  echo
+  echo "Options:"
+  echo "  -h, --help     Show this help message"
+  echo "  -l, --list     List all SSH keys and their status"
+  echo "  -c, --clear    Remove all loaded SSH keys"
+  echo
+  echo "Interactive mode (default):"
+  echo "  - Shows all SSH keys with load status"
+  echo "  - Use fzf to select and toggle keys"
+  echo "  - ● indicates loaded keys, ○ indicates unloaded keys"
+}
+
+# List all keys
+list_keys() {
+  echo "SSH Keys Status:"
+  echo "==============="
+  local keys=($(get_ssh_keys))
+  for key in "${keys[@]}"; do
+    display_key_info "$key"
+  done
+}
+
+# Clear all loaded keys
+clear_keys() {
+  echo "Removing all loaded SSH keys..."
+  ssh-add -D
+  echo "✓ All keys removed"
+}
+
+# Parse command line arguments
+case "${1:-}" in
+-h | --help)
+  show_help
+  exit 0
+  ;;
+-l | --list)
+  list_keys
+  exit 0
+  ;;
+-c | --clear)
+  clear_keys
+  exit 0
+  ;;
+"")
+  main
+  ;;
+*)
+  echo "Unknown option: $1"
+  echo "Use -h or --help for usage information"
+  exit 1
+  ;;
+esac
